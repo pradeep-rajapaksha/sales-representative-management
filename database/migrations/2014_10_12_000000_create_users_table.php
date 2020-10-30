@@ -22,6 +22,8 @@ class CreateUsersTable extends Migration
             $table->string('telephone', 10);
             $table->date('joined_on')->nullable();
             $table->integer('role_id')->default(2); // Default Role: Sales Representative
+            $table->unsignedBigInteger('salse_route_id')->nullable();
+            $table->mediumText('comments')->nullable();
             $table->enum('status', ['active', 'inactive'])->default('active'); 
             $table->rememberToken();
             $table->timestamps();

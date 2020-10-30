@@ -40,6 +40,10 @@
                                             <th>Status</th>
                                             <td>{{ $representative->status }}</td>
                                         </tr>
+                                        <tr>
+                                            <th>Current Route</th>
+                                            <td>{{ ($representative->current_route) ? $representative->current_route->name : '' }}</td>
+                                        </tr>
                                     @else
                                         <tr>
                                             <td>

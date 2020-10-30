@@ -18,7 +18,7 @@
                         <div class="col">
                             <div class="row">
                                 <div class="col-md-12">
-                                    {!! Form::open(['url' => '/sales-team', 'class' => 'form-sales-representative-create', 'files' => true]) !!}
+                                    {!! Form::open(['url' => '/admin/sales-team', 'class' => 'form-sales-representative-create', 'files' => true]) !!}
                                         @include ('sales-representative.form')
                                     {!! Form::close() !!}
                                 </div>

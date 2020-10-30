@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'telephone', 'joined_on', 'role_id', 'status'
+        'name', 'email', 'password', 'telephone', 'joined_on', 'role_id', 'comments', 'status'
     ];
 
     /**
@@ -58,6 +58,7 @@ class User extends Authenticatable
         'telephone'        => 'required',
         'role_id'          => 'required',
         'joined_on'        => '',
+        'comments'         => '',
         'status'           => '',
     ];
 }

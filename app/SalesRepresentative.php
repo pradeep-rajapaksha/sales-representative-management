@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class SalesRepresentative extends Model
 {
-    //
     /**
      * The attributes that define table name.
      *
@@ -20,7 +19,7 @@ class SalesRepresentative extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'telephone', 'joined_on', 'role_id', 'status'
+        'name', 'email', 'telephone', 'joined_on', 'role_id', 'salse_route_id', 'status'
     ];
 
     /**
@@ -37,10 +36,12 @@ class SalesRepresentative extends Model
      */
     public static $rules = [
         'name'             => 'required',
-        'email'            => 'required',
-        'telephone'        => 'required',
-        'role_id'          => 'required',
+        'email'            => 'required|email|unique:users,email',
+        'telephone'        => 'required|numeric|digits:10',
+        // 'role_id'          => '',
+        'salse_route_id'   => 'required',
         'joined_on'        => '',
         'status'           => '',
     ];
+
 }

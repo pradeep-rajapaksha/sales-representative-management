@@ -32,12 +32,13 @@
                                         <td>{{ $representative->name }}</td>
                                         <td>{{ $representative->email }}</td>
                                         <td>{{ $representative->telephone }}</td>
-                                        <td></td>
+                                        <td>{{$representative->current_route}}</td>
                                         <td>{{ $representative->status }}</td>
                                         <td>
                                             <a href="{{ route('sales-team.show', $representative->id) }}" class="btn btn-sm btn-info"><i class="fas fa-eye"></i></a>
                                             <a href="{{ route('sales-team.edit', $representative->id) }}" class="btn btn-sm btn-secondary"><i class="fas fa-edit"></i></a>
-                                            <a href="#" class="btn btn-sm btn-danger" onclick="window.delete('{{$representative->id}}')"><i class="fas fa-trash"></i></a>
+                                            <a href="{{ route('sales-team.delete', $representative->id) }}" class="btn btn-sm btn-danger" onclick="window.delete()"><i class="fas fa-trash"></i></a>
+
                                         </td>
                                     </tr>
                                 @endforeach
@@ -57,7 +58,8 @@
     <script type="text/javascript">
         window.delete = function(id=null) { 
             if (confirm("Confirm delete?") && id!==null)
-                // window.location.href  = "/parents/"+id+"/delete";
+                return true;
+                // window.location.href  = "admin/sales-team/"+id+"/delete";
             return false;
         }
     </script>

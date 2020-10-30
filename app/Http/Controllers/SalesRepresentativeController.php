@@ -25,7 +25,7 @@ class SalesRepresentativeController extends Controller
     public function index()
     {
         //
-        $team = \App\SalesRepresentative::where('role_id', 2)->get();
+        $team = \App\SalesRepresentative::select('users.*', 'salse_routes.name as current_route')->where('role_id', 2)->join('salse_routes', 'salse_routes.id', 'users.salse_route_id')->get();
         // dd($team);
         return view('sales-representative/index', compact('team'));
     }
@@ -38,7 +38,8 @@ class SalesRepresentativeController extends Controller
     public function create()
     {
         //
-        return view('sales-representative/create');
+        $salseRoutes = \App\SalesRoute::all()->pluck('name', 'id');
+        return view('sales-representative/create', compact('salseRoutes'));
     }
 
     /**
@@ -50,6 +51,23 @@ class SalesRepresentativeController extends Controller
     public function store(Request $request)
     {
         //
+        $this->validate($request, \App\SalesRepresentative::$rules);
+
+        $salesR = new \App\SalesRepresentative();
+        $salesR->name      = $request->name;
+        $salesR->email     = $request->email;
+        $salesR->telephone = $request->telephone;
+        $salesR->joined_on = $request->joined_on;
+        $salesR->salse_route_id = $request->salse_route_id;
+        $salesR->role_id   = 2;
+        $salesR->status    = $request->status;
+        // dd($salesR);
+        if ($salesR->save()) {
+            // 
+            return redirect('admin/sales-team')->with('flash_message_success', 'Sales representative created successfully!');
+        }
+        
+        return redirect()->back()->withInput()->with('flash_message_error', 'Sales representative couldn`t create successfully! Please chack entered data.');
     }
 
     /**
@@ -62,7 +80,10 @@ class SalesRepresentativeController extends Controller
     {
         //
         $representative = \App\SalesRepresentative::find($id);
-        // dd($representative);
+        
+        if($representative)
+            $representative->current_route = \App\SalesRoute::find($representative->salse_route_id);
+
         return view('sales-representative/view', compact('representative'));
     }
 
@@ -72,11 +93,12 @@ class SalesRepresentativeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(\App\SalesRepresentative $representative)
+    public function edit($id)
     {
         //
-        // $representative = 
-        return view('sales-representative/edit', compact('representative'));
+        $representative = \App\SalesRepresentative::find($id);
+        $salseRoutes = \App\SalesRoute::all()->pluck('name', 'id');
+        return view('sales-representative/edit', compact('representative', 'salseRoutes'));
     }
 
     /**
@@ -88,7 +110,28 @@ class SalesRepresentativeController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        // change validation rule for ignore current user with the same email
+        \App\SalesRepresentative::$rules['email'] = 'required|email|unique:users,email,'.$id;
+
+        $this->validate($request, \App\SalesRepresentative::$rules);
+
+        \DB::beginTransaction();
+            try { 
+                $salesR = \App\SalesRepresentative::find($id);
+                $salesR->name      = $request->name;
+                $salesR->email     = $request->email;
+                $salesR->telephone = $request->telephone;
+                $salesR->joined_on = $request->joined_on;
+                $salesR->salse_route_id = $request->salse_route_id;
+                $salesR->status    = $request->status;
+                $salesR->save();
+                // 
+            } catch (Exception $e) { 
+                \DB::rollBack(); 
+                return redirect('')->back()->withInput()->with('flash_message_error', 'Sales representative update unsuccessful, Please tey again!');
+            }
+        \DB::commit();
+        return redirect('admin/sales-team')->with('flash_message_success', 'Sales representative updated successfully!');
     }
 
     /**
@@ -100,5 +143,17 @@ class SalesRepresentativeController extends Controller
     public function destroy($id)
     {
         //
+        $representative = \App\SalesRepresentative::find($id);
+        \DB::beginTransaction();
+            try {
+                if($representative)
+                    $representative->delete();
+            } 
+            catch (Exception $e) { 
+                \DB::rollBack(); 
+                return redirect('admin/sales-team')->back()->withInput()->with('flash_message_error', 'Sales representative delete unsuccessful, Please tey again!');
+            }
+        \DB::commit();
+        return redirect('admin/sales-team')->with('flash_message_success', 'Sales representative deleted successfully!');
     }
 }

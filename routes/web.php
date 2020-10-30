@@ -23,7 +23,4 @@ Route::get('/', 'HomeController@index')->name('home');
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::resource('admin/sales-team', 'SalesRepresentativeController');
-
-
-// pradeepprasanna.rajapaksha4@gmail.com
-// cfe899f505!
+Route::get('admin/sales-team/{sales_team}/delete', 'SalesRepresentativeController@destroy')->name('sales-team.delete');

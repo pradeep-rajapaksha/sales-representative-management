@@ -55,7 +55,7 @@ class User extends Authenticatable
     public static $rules = [
         'name'             => 'required',
         'email'            => 'required',
-        'telephone'        => 'required',
+        'telephone'        => '',
         'role_id'          => 'required',
         'joined_on'        => '',
         'comments'         => '',

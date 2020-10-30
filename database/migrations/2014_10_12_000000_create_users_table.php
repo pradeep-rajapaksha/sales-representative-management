@@ -19,7 +19,7 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->nullable();
-            $table->string('telephone', 10);
+            $table->string('telephone', 10)->nullable();
             $table->date('joined_on')->nullable();
             $table->integer('role_id')->default(2); // Default Role: Sales Representative
             $table->unsignedBigInteger('salse_route_id')->nullable();
